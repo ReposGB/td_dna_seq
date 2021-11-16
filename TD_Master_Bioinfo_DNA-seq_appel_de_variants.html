@@ -459,7 +459,7 @@ div.tocify {
 <li><strong>Omni 1000 genomes</strong>. Base de référence des sites polymorphiques de sujets sains revalidés sur la plateforme Omni par le Broad Institute.</li>
 <li><strong>hapMap</strong>: Base de donnés d’haplotypes décrivant les patrons communs des variations génétiques du génome humain.</li>
 </ul>
-<p>En pratique, cette correction se fait par deux appels successifs à <strong>GATK</strong>. Le premier appel est un appel à <strong>GATK Recalibrator</strong>, qui va calculer les changements à appliquer sur les bam. Le second consiste à appliquer ces changements par un appel à <strong>GATK ApplyBQSR</strong>.</p>
+<p>En pratique, cette correction se fait par deux appels successifs à <strong>GATK</strong>. Le premier appel est un appel à <strong>GATK Recalibrator</strong>, qui va calculer les changements à appliquer sur les fichiers <strong>BAM</strong>. Le second consiste à appliquer ces changements par un appel à <strong>GATK ApplyBQSR</strong>.</p>
 <p><strong>TD:</strong></p>
 <ol style="list-style-type: decimal">
 <li>Lire la documentation correspondant à chaque outil:</li>
@@ -469,21 +469,21 @@ div.tocify {
 <li><p><strong>ApplyBSQR</strong> <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360037225212-ApplyBQSR" class="uri">https://gatk.broadinstitute.org/hc/en-us/articles/360037225212-ApplyBQSR</a></p></li>
 </ul>
 <ol start="2" style="list-style-type: decimal">
-<li>Modifier le script <code>baserecalibrate_all.sh</code> pour exécuter ces deux étapes et enregistrer les résultats dans des fichiers <strong>BAM</strong> nommés <code>*..recalibrated.bam</code>.</li>
+<li>Modifier le script <code>baserecalibrate_all.sh</code> pour exécuter ces deux étapes et enregistrer les résultats dans des fichiers <strong>BAM</strong> nommés <code>*.recalibrated.bam</code>.</li>
 </ol>
 </div>
 </div>
 <div id="appel-de-variants" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Appel de variants</h1>
-<p>Cette dernière étape consiste <strong>à détecter les SNPs et INDELs</strong> présents dans les séquences.</p>
+<p>Cette dernière étape consiste <strong>à détecter les SNPs et INDELs</strong>.</p>
 <div id="appel-de-variants-par-échantillobns" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> Appel de variants par échantillobns</h2>
 <p>Maintenant que les fichiers <strong>BAM</strong> sont prêts, nous allons faire un appel de variants par échantillons et générer des fichiers <strong>GVCF</strong>.</p>
-<p>Cela se fait par <strong>GATK HaplotypeCaller</strong>. Cet outil effectue une <strong>Réalignement local</strong> pour optimiser la recherche d’Indels et renvoie un fichier <strong>GVCF* ainsi qu’un fichier </strong>BAM* contenant les <strong>séquences réalignées</strong>. C’est donc une opération <strong>très coûteuse en temps de calcul</strong>.</p>
+<p>Cela se fait par <strong>GATK HaplotypeCaller</strong>. Cet outil effectue une <strong>Réalignement local</strong> pour optimiser la recherche d’INDELS et renvoie un fichier <strong>GVCF</strong> et un fichier <strong>BAM</strong> contenant les <strong>séquences réalignées</strong>. C’est donc une opération <strong>très coûteuse en temps de calcul</strong>.</p>
 <p><strong>TD:</strong></p>
 <ol style="list-style-type: decimal">
 <li><p>Lire la documentation de <strong>GATK HaplotypeCaller</strong>.</p></li>
-<li><p>Prendre modèle sur l’un des scripts précédents pour créer un script appelé <code>variantcall_gvcf.sh</code>en **bash* et l’utiliser pour faire l’appel de variants sur les fichiers <code>*bam.recalibrated</code>.</p></li>
+<li><p>Prendre modèle sur l’un des scripts précédents pour créer un script appelé <code>variantcall_gvcf.sh</code> et l’utiliser pour faire l’appel de variants sur les fichiers <code>*bam.recalibrated</code>.</p></li>
 </ol>
 <p><strong>Important</strong>: On ne va pas pouvoir <strong>matériellement</strong> faire l’appel de variants <strong>à cause du temps de calcul</strong> et de la <strong>mémoire vive nécessaire</strong>. Pour les besoins de ce TD, j’ai déjà fait cet appel sur un cluster et stocké les résultats dans le sous répertoire<code>GVCF</code>.</p>
 <p>Faire la commande suivante pour obtenir les fichiers dont on a besoin pour la suite:</p>
@@ -492,11 +492,11 @@ div.tocify {
 <div id="consolidation-des-gvcfs-en-un-fichier-vcf-multiéchantillons." class="section level2" number="7.2">
 <h2><span class="header-section-number">7.2</span> Consolidation des GVCFs en un fichier VCF multiéchantillons.</h2>
 <ul>
-<li><strong>Etape 1:</strong> Nous allons grouper les différents fichiers GVCFs dans une base de données. Pour cette étape, nous utilisons l’outil <strong>GATK GenomicsDBImport</strong>.</li>
-</ul>
-<p>Il prends en entrée: - Une <strong>table de correspondance</strong> des échantillons et des fichiers GVCF: <code>gvcf_sample_map.txt</code>.</p>
+<li><p><strong>Etape 1:</strong> Nous allons grouper les différents fichiers GVCFs dans une base de données. Pour cette étape, nous utilisons l’outil <strong>GATK GenomicsDBImport</strong>. Il prends en entrée:</p>
 <ul>
+<li><p>Une <strong>table de correspondance</strong> des échantillons et des fichiers GVCF: <code>gvcf_sample_map.txt</code>.</p></li>
 <li><p>Un fichier contenant les régions à analyser (appelées <em>intervalles</em>) généré par <strong>picard BedToIntervalList</strong>.</p></li>
+</ul></li>
 <li><p><strong>Etape 2:</strong> Il faut ensuite convertir la base de données de variants en un fichier <strong>VCF multi-échantillons</strong>. Pour cela, nous faisons appel à <strong>GATK GenotypeGVCFs</strong>.</p></li>
 </ul>
 <p><strong>TD:</strong></p>
@@ -533,7 +533,7 @@ div.tocify {
 </div>
 <div id="visualisation-et-annotation-de-variants" class="section level1" number="8">
 <h1><span class="header-section-number">8</span> Visualisation et annotation de variants</h1>
-<p>Lors de cette dernière étape, nous allons <strong>examiner les résultats avec des outils graphiques</strong> et les <strong>enrichir avec les informations présentent dans les bases de données publiques de variants</strong>.</p>
+<p>Lors de cette dernière étape, nous allons <strong>examiner les résultats avec des outils graphiques</strong> et les <strong>enrichir</strong> avec les informations présentes dans les <strong>bases de données publiques</strong> de variants.</p>
 <div id="visualisation" class="section level2" number="8.1">
 <h2><span class="header-section-number">8.1</span> Visualisation</h2>
 <p>Nous pouvons visualiser les variants obtenus avec l’outil <strong>IGV</strong>.</p>
