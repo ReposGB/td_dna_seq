@@ -454,11 +454,11 @@ div.tocify {
 <p>Il faut donc utiliser les bases de données publiques pour cette étape.</p>
 <p>Nous allons utiliser les données provenant des bases suivantes:</p>
 <ul>
-<li><strong>dbSNP</strong> version 138: Base de données des sites polymorphiques, des mutations communes pour les sujets sains et liées à des situations cliniques.</li>
 <li><strong>1000 genomes</strong>. Base de référence des sites polymorphiques de sujets sains.</li>
 <li><strong>Omni 1000 genomes</strong>. Base de référence des sites polymorphiques de sujets sains revalidés sur la plateforme Omni par le Broad Institute.</li>
 <li><strong>hapMap</strong>: Base de donnés d’haplotypes décrivant les patrons communs des variations génétiques du génome humain.</li>
 </ul>
+<p><strong>Note:</strong> On peut aussi ajouter la base <strong>dbSNP</strong>. Je ne l’ai pas jointe aux ressources à cause de sa taille sur disque.</p>
 <p>En pratique, cette correction se fait par deux appels successifs à <strong>GATK</strong>. Le premier appel est un appel à <strong>GATK Recalibrator</strong>, qui va calculer les changements à appliquer sur les fichiers <strong>BAM</strong>. Le second consiste à appliquer ces changements par un appel à <strong>GATK ApplyBQSR</strong>.</p>
 <p><strong>TD:</strong></p>
 <ol style="list-style-type: decimal">
@@ -476,8 +476,8 @@ div.tocify {
 <div id="appel-de-variants" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Appel de variants</h1>
 <p>Cette dernière étape consiste <strong>à détecter les SNPs et INDELs</strong>.</p>
-<div id="appel-de-variants-par-échantillobns" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Appel de variants par échantillobns</h2>
+<div id="appel-de-variants-par-échantillons" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Appel de variants par échantillons</h2>
 <p>Maintenant que les fichiers <strong>BAM</strong> sont prêts, nous allons faire un appel de variants par échantillons et générer des fichiers <strong>GVCF</strong>.</p>
 <p>Cela se fait par <strong>GATK HaplotypeCaller</strong>. Cet outil effectue une <strong>Réalignement local</strong> pour optimiser la recherche d’INDELS et renvoie un fichier <strong>GVCF</strong> et un fichier <strong>BAM</strong> contenant les <strong>séquences réalignées</strong>. C’est donc une opération <strong>très coûteuse en temps de calcul</strong>.</p>
 <p><strong>TD:</strong></p>
