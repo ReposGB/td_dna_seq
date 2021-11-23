@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Ghislain Bidaut, Plateforme Cibi, CRCM Aix-Marseille Université" />
+<meta name="author" content="Ghislain Bidaut, Plateforme Cibi, CRCM, Aix-Marseille Université" />
 
 
 <title>TD DNA-Seq - Etude d’un pipeline d’appel de variants constitutionnels</title>
@@ -241,7 +241,8 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">TD DNA-Seq - Etude d’un pipeline d’appel de variants constitutionnels</h1>
-<h4 class="author">Ghislain Bidaut, Plateforme Cibi, CRCM Aix-Marseille Université</h4>
+<h3 class="subtitle">Master 2 Bioinformatique - Aix-Marseille Université</h3>
+<h4 class="author">Ghislain Bidaut, Plateforme Cibi, CRCM, Aix-Marseille Université</h4>
 <h4 class="date">24/11/2021</h4>
 
 </div>
@@ -415,9 +416,8 @@ div.tocify {
 </div>
 <div id="récupération-du-génome-et-données-dannotation" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Récupération du génome et données d’annotation</h2>
-<p>Nous avons déjà récupéré les fichiers du génome de référence <strong>hg38</strong> à partir du site de <strong>GATK</strong> du <strong>Broad Institute</strong>.</p>
-<p><a href="https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false" class="uri">https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false</a></p>
-<p>Il faut récupérer le fichier <strong>fasta</strong> mais aussi les indexes associés (<strong>dict</strong>, <strong>alt</strong>, <strong>amb</strong> <strong>ann</strong>, <strong>bwt</strong>, <strong>pac</strong> <strong>sa</strong> et <strong>fai</strong>).</p>
+<p>Nous avons déjà récupéré les fichiers du génome de référence <strong>hg38</strong> à partir du site de <strong>GATK</strong> du <strong>Broad Institute</strong>, mis à disposition ici: <a href="https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false" class="uri">https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false</a></p>
+<p>Il faut récupérer le fichier <strong>fasta</strong> mais aussi les indexes associés (Fichiers <strong>dict</strong>, <strong>alt</strong>, <strong>amb</strong> <strong>ann</strong>, <strong>bwt</strong>, <strong>pac</strong>, <strong>sa</strong> et <strong>fai</strong>).</p>
 <p>Ces données sont dans le répertoire <code>hg38.genome</code>.</p>
 <p>De plus, nous allons filtrer les alignements sur les gènes utilisés lors de la capture. Pour cela, il faut spécifier les régions séquencées grâce à un fichier <strong>BED</strong>.</p>
 <p>Il est possible de créer ce fichier sur l’outil <strong>hgTables</strong> du site de l’<strong>UCSC</strong>: <a href="https://genome.ucsc.edu/cgi-bin/hgTables" class="uri">https://genome.ucsc.edu/cgi-bin/hgTables</a>. Pour les besoins de ce TD, il a déjà été créé et est présent dans le répertoire: <code>nikitin_et_al.bed</code>.</p>
@@ -454,11 +454,12 @@ div.tocify {
 <p>Il faut donc utiliser les bases de données publiques pour cette étape.</p>
 <p>Nous allons utiliser les données provenant des bases suivantes:</p>
 <ul>
+<li><strong>dbSNP</strong>. Base de référence de l’ensemble des polymorphysmes et INDELS (<em>Fichier présent dans la machine virtuelle uniquement</em>)</li>
 <li><strong>1000 genomes</strong>. Base de référence des sites polymorphiques de sujets sains.</li>
 <li><strong>Omni 1000 genomes</strong>. Base de référence des sites polymorphiques de sujets sains revalidés sur la plateforme Omni par le Broad Institute.</li>
 <li><strong>hapMap</strong>: Base de donnés d’haplotypes décrivant les patrons communs des variations génétiques du génome humain.</li>
 </ul>
-<p><strong>Note:</strong> On peut aussi ajouter la base <strong>dbSNP</strong>. Je ne l’ai pas jointe aux ressources à cause de sa taille sur disque.</p>
+<p>Les fichiers correspondant à ces bases ont été rendus disponibles par les auteurs de <strong>GATK</strong>: <a href="https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false" class="uri">https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0;tab=objects?pli=1&amp;prefix=&amp;forceOnObjectsSortingFiltering=false</a></p>
 <p>En pratique, cette correction se fait par deux appels successifs à <strong>GATK</strong>. Le premier appel est un appel à <strong>GATK Recalibrator</strong>, qui va calculer les changements à appliquer sur les fichiers <strong>BAM</strong>. Le second consiste à appliquer ces changements par un appel à <strong>GATK ApplyBQSR</strong>.</p>
 <p><strong>TD:</strong></p>
 <ol style="list-style-type: decimal">
