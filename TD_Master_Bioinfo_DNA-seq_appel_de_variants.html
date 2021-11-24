@@ -256,13 +256,13 @@ div.tocify {
 <p>Pour la mise en place pratique de ce pipeline, nous allons analyser des données générées par Niktin AG <em>et al</em>: Lynch Syndrome Germline Mutations in Breast Cancer: Next Generation Sequencing Case-Control Study of 1,263 Participants. <em>Front Oncol</em>. 2020; 10: 666.</p>
 <p>Publication: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7273971/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7273971/</a></p>
 <p>Ces données représentent <strong>des séquences d’ADN</strong> recueillies chez des patients atteint du syndrome de Lynch.</p>
-<p>C’est une maladie associée à un fort risque de développer un cancer, notamment un cancer du sein. Cette maladie est associée à la présence de mutations constitutionnelles dans les gènes du pathway <em>MMR</em>. Niktin <em>et al.</em> ont donc profilé 711 patients atteins d’un cancer du sein héréditaire, 60 avec un cancer du sein sporadique, et 492 donneurs sains pour comprendre le rôle des mutations génétiques dans l’apparition de ce syndrome.</p>
+<p>C’est une maladie associée à un fort risque de développer un cancer, notamment un cancer du sein. Cette maladie est associée à la présence de mutations constitutionnelles dans les gènes du pathway <em>MMR</em>. Niktin <em>et al.</em> ont donc profilé 711 patients atteints d’un cancer du sein héréditaire, 60 avec un cancer du sein sporadique, et 492 donneurs sains pour comprendre le rôle des mutations génétiques dans l’apparition de ce syndrome.</p>
 <p>En particulier, nous allons <strong>détecter et identifier</strong> les <strong>SNPs (Single Nucleotides Polymorphisms)</strong> et <strong>INDELS</strong> (Insertion-délétions de petites taille) grâce aux séquences d’ADN.</p>
 <p>Les données décrites dans cette publication sont disponibles sur le serveur Européan Nucleotide Archive (ENA) à l’URL</p>
 <p><a href="https://www.ebi.ac.uk/ena/browser/view/PRJNA588789" class="uri">https://www.ebi.ac.uk/ena/browser/view/PRJNA588789</a></p>
 <p>Ce sont des <strong>données de séquençage ciblé</strong> sur les gènes du pathways <em>MMR</em>: <strong>MLH1, MSH2, MSH6, EPCAM, and PMS2</strong> avec un séquenceur Illumina (Capture).</p>
 <p>Pour des raisons de rapidité d’analyse et de capacité d’exécution de la VM, nous allons analyser uniquement les données pour 4 patients. Ce sont des données de type <em>paired-end</em> (PE) donc 2 fichiers FASTQ par patient.</p>
-<p>Ces données ont été <strong>sous-échantillonnées</strong> (à l’aide de l’utilitaire <code>seqtk</code>) à <strong>100000</strong> reads.</p>
+<p>Ces données ont été <strong>sous-échantillonnées</strong> (à l’aide de l’utilitaire <code>seqtk</code>) à <strong>100,000</strong> reads.</p>
 <p>J’ai mis en place un <strong>environnement d’analyse complet</strong> que vous trouverez dans le répertoire <code>DNA-seq_PRJDNA588789_Subsampled</code> dans la VM contenant les données (fichiers FASTQ) et les scripts.</p>
 <div id="données" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Données</h2>
@@ -396,7 +396,7 @@ div.tocify {
 <h2><span class="header-section-number">4.2</span> Trimming</h2>
 <p>De manière à supprimer les séquences adaptatrices et assurer la qualité de nos séquences, nous allons <strong>opérer un trimming</strong> à l’aide de l’utilitaire <strong>Trimmomatic</strong>.</p>
 <p><strong>TD:</strong></p>
-<p>Le script <code>trim_all.sh</code> pfat un appel <strong>Trimmomatic</strong> sur l’ensemble des fichiers.</p>
+<p>Le script <code>trim_all.sh</code> exécute un appel <strong>Trimmomatic</strong> sur l’ensemble des fichiers Fastq.</p>
 <ol style="list-style-type: decimal">
 <li><p>Pouvez vous décrire exactement ce qui est trimmé à partir de la documentation de Trimmomatic ?</p></li>
 <li><p>Exécuter le trimming.</p></li>
@@ -486,7 +486,7 @@ div.tocify {
 <li><p>Lire la documentation de <strong>GATK HaplotypeCaller</strong>.</p></li>
 <li><p>Prendre modèle sur l’un des scripts précédents pour créer un script appelé <code>variantcall_gvcf.sh</code> et l’utiliser pour faire l’appel de variants sur les fichiers <code>*bam.recalibrated</code>.</p></li>
 </ol>
-<p><strong>Important</strong>: On ne va pas pouvoir <strong>matériellement</strong> faire l’appel de variants <strong>à cause du temps de calcul</strong> et de la <strong>mémoire vive nécessaire</strong>. Pour les besoins de ce TD, j’ai déjà fait cet appel sur un cluster et stocké les résultats dans le sous répertoire<code>GVCF</code>.</p>
+<p><strong>Important</strong>: On ne va pas pouvoir <strong>matériellement</strong> faire l’appel de variants <strong>à cause du temps de calcul</strong> nécessaire. Pour les besoins de ce TD, j’ai déjà fait cet appel sur un cluster et stocké les résultats dans le sous répertoire<code>GVCF</code>.</p>
 <p>Faire la commande suivante pour obtenir les fichiers dont on a besoin pour la suite:</p>
 <pre class="bash"><code>cp GVCF/* .</code></pre>
 </div>
@@ -515,7 +515,7 @@ div.tocify {
 </div>
 <div id="filtrage-des-variants" class="section level2" number="7.3">
 <h2><span class="header-section-number">7.3</span> Filtrage des variants</h2>
-<p>Nous allons maintenant filtrer les variants/indels à l’aide de l’algorithme Variant Quality Score Recalibration (VQSR). Cet algorithme utilise les bases de données publiques pour attribuer un <strong>score</strong> aux variants. L’algorithme base ce score entre l’annotation de ce variant et la probabilité que ce soit un variant véritable ou simplement un artéfact de séquençage. Une fois attribué, ce score pourra ensuite être utilisé pour <strong>filtrer</strong> les variants.</p>
+<p>Nous allons maintenant filtrer les SNPs/INDELS à l’aide de l’algorithme Variant Quality Score Recalibration (VQSR). Cet algorithme utilise les bases de données publiques pour attribuer un <strong>score</strong> aux variants. L’algorithme base ce score entre l’annotation de ce variant et la probabilité que ce soit un variant véritable ou simplement un artéfact de séquençage. Une fois attribué, ce score pourra ensuite être utilisé pour <strong>filtrer</strong> les variants.</p>
 <p>Les bases sont présentes dans le sous répertoire <code>ressources</code>. ce sont les mêmes qui ont servi à recalibrer les scores qualité des reads.</p>
 <p>Le filtrage se fait en deux étapes:</p>
 <ul>
@@ -523,9 +523,9 @@ div.tocify {
 <li><strong>Etape 2</strong>: Nous allons appliquer ces scores et régénérer un fichier <strong>VCF</strong> à l’aide de <strong>GATK ApplyVQSR</strong>.</li>
 </ul>
 <p><strong>TD:</strong></p>
-<p><strong>Etape préliminaires</strong>: Un fichier VCF correspondant à des <strong>données non sous-échantillonnées</strong> se trouve dans le répertoire <code>full_VCF</code>. Il faut les copier dans le répertoire courant:</p>
+<p><strong>Etape préliminaire</strong>: Un fichier VCF correspondant à des <strong>données non sous-échantillonnées</strong> se trouve dans le répertoire <code>full_VCF</code>. Il faut les copier dans le répertoire courant:</p>
 <pre class="bash"><code>cp full_vcf/* .</code></pre>
-<p>Le script de filtrage des variants existe déja (<code>filter_variants.sh</code>) mais ne comporte que l’appel à <strong>GATK VariantRecalibrator</strong>.</p>
+<p>Le script de filtrage des variants existe déjà (<code>filter_variants.sh</code>) mais ne comporte que l’appel à <strong>GATK VariantRecalibrator</strong>.</p>
 <ol style="list-style-type: decimal">
 <li><strong>Ajouter</strong> un appel à <strong>GATK ApplyVQSR</strong> en tenant compte des sorties de <strong>GATK VariantRecalibrator</strong> et en spécifiant une sensibilité de 0.99.</li>
 <li><strong>Exécuter</strong> le script.</li>
