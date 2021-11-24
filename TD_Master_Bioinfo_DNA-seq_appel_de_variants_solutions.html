@@ -328,8 +328,7 @@ do
         out=${bam/.bam/.recalibrated.bam}
         table=${out/.bam/.recal_table.txt}
 
-        # Etape baserecalibrator
-        
+        # Etape BaseRecalibrator
         $HOME/gatk-4.2.2.0/gatk BaseRecalibrator -I $bam -R hg38.genome/resources_broad_hg38_v0_Homo_sapiens_assembly38.fasta  --known-sites ressources/resources_broad_hg38_v0_Homo_sapiens_assembly38.dbsnp138.vcf  --known-sites ressources/resources_broad_hg38_v0_1000G_phase1.snps.high_confidence.hg38.vcf.gz --known-sites ressources/resources_broad_hg38_v0_1000G_omni2.5.hg38.vcf.gz --known-sites ressources/resources_broad_hg38_v0_hapmap_3.3.hg38.vcf.gz  -O $table
         
         # Etape AppliBQSR
