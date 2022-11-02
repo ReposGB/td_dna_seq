@@ -1901,19 +1901,23 @@ temps de calcul</strong>.</p>
 <ol style="list-style-type: decimal">
 <li><p>Lire la documentation de <strong>GATK
 HaplotypeCaller</strong>.</p></li>
-<li><p>Prendre modèle sur l’un des scripts précédents pour créer un
-script appelé <code>variantcall_gvcf.sh</code> et l’utiliser pour faire
-l’appel de variants sur les fichiers
-<code>*bam.recalibrated</code>.</p></li>
+<li><p>Compléter le script<code>variantcall_gvcf.sh</code> et l’utiliser
+pour faire l’appel de variants sur les fichiers
+<code>*bam.recalibrated</code> en utilisant l’outil GATK
+<strong>HaplotypeCaller</strong>. <strong>Important</strong>: Ajouter
+les options <code>-Xmx8g</code> (pour augmenter la mémoire allouée à
+Java) et <code>-ERC GVCF</code> pour être compatible avec le script
+suivant.</p></li>
+<li><p>On ne va pas pouvoir <strong>matériellement</strong> faire
+l’appel de variants <strong>à cause du temps de calcul</strong>
+nécessaire. Pour les besoins de ce TD, j’ai déjà exécuté ce script et
+stocké les résultats dans le sous répertoire
+<code>GATK_REALIGNED_PREV</code>.</p></li>
 </ol>
-<p><strong>Important</strong>: On ne va pas pouvoir
-<strong>matériellement</strong> faire l’appel de variants <strong>à
-cause du temps de calcul</strong> nécessaire. Pour les besoins de ce TD,
-j’ai déjà exécuté ce script et stocké les résultats dans le sous
-répertoire<code>GVCF</code>.</p>
 <p>Faire la commande suivante pour obtenir les fichiers dont on a besoin
 pour la suite:</p>
-<pre class="bash"><code>cp GVCF/* .</code></pre>
+<pre class="bash"><code>mkdir GATK_REALIGNED
+cp GATK_REALIGNED_PREV/* GATK_REALIGNED/</code></pre>
 </div>
 <div id="consolidation-des-gvcfs-en-un-fichier-vcf-multiéchantillons." class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> Consolidation des
