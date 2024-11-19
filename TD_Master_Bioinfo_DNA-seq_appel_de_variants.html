@@ -2915,8 +2915,8 @@ bioinformatique</h2>
 <p>Ce pipeline est basé sur l’utilisation de <strong>BWA</strong> et
 <strong>Varscan</strong>. Il permets l’appel de SNPs et d’INDELS en
 génétique constitutionnelle.</p>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-ca45a1ac0fb7c64a5285" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-ca45a1ac0fb7c64a5285">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = TB]\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\ndata [label = \"Dataset\", shape = folder, fillcolor = Beige]\nqc_control [label =  \"Contrôle Qualité\n(FASTQC)\"]\ntrimming [label = \"Trimming\n(Trimmomatic)\"]\nalignment [label = \"Alignement\n(BWA MEM)\"]\nmarkduplicate [label =\"Readgroups + Marquage Duplicats\n(picard)\"]\nvariantalling [label= \"Variant Calling\n(Varscan)\"]\nvariantannotation [label = \"Variant Annotation\n(snpEff)\"]\nvcfdata [label = \"VCF annoté\" shape = folder]\n\n# edge definitions with the node IDs\ndata  -> qc_control -> trimming  -> alignment -> markduplicate -> variantalling -> variantannotation -> vcfdata\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-8b12429f9aec9ff077de" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-8b12429f9aec9ff077de">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = TB]\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\ndata [label = \"Dataset\", shape = folder, fillcolor = Beige]\nqc_control [label =  \"Contrôle Qualité\n(FASTQC)\"]\ntrimming [label = \"Trimming\n(Trimmomatic)\"]\nalignment [label = \"Alignement\n(BWA MEM)\"]\nmarkduplicate [label =\"Readgroups + Marquage Duplicats\n(picard)\"]\nvariantalling [label= \"Variant Calling\n(Varscan)\"]\nvariantannotation [label = \"Variant Annotation\n(snpEff)\"]\nvcfdata [label = \"VCF annoté\" shape = folder]\n\n# edge definitions with the node IDs\ndata  -> qc_control -> trimming  -> alignment -> markduplicate -> variantalling -> variantannotation -> vcfdata\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="etapes-préliminaires" class="section level1" number="2">
@@ -3095,8 +3095,8 @@ courant:</p>
 <div id="analyse-basique-du-fchier-vcf-avant-annotation" class="section level2" number="5.2">
 <h2><span class="header-section-number">5.2</span> Analyse basique du
 fchier VCF avant annotation</h2>
-<div id="tp" class="section level3" number="5.2.1">
-<h3><span class="header-section-number">5.2.1</span> TP:</h3>
+<div id="td" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> TD:</h3>
 <ol style="list-style-type: decimal">
 <li>Faire tourner le script
 <code>./script/vcf_addcontig_header.sh</code>pour ajouter l’information
