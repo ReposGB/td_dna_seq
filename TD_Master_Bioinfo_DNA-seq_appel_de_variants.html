@@ -2915,8 +2915,8 @@ bioinformatique</h2>
 <p>Ce pipeline est basé sur l’utilisation de <strong>BWA</strong> et
 <strong>Varscan</strong>. Il permet l’appel de SNPs et d’INDELS en
 génétique constitutionnelle.</p>
-<div class="grViz html-widget html-fill-item" id="htmlwidget-02bdbc66d4da66d00e29" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-02bdbc66d4da66d00e29">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = TB]\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\ndata [label = \"Dataset\", shape = folder, fillcolor = Beige]\nqc_control [label =  \"Contrôle Qualité\n(FASTQC)\"]\ntrimming [label = \"Trimming\n(Trimmomatic)\"]\nalignment [label = \"Alignement\n(BWA MEM)\"]\nmarkduplicate [label =\"Readgroups + Marquage Duplicats\n(picard)\"]\nvariantalling [label= \"Variant Calling\n(Varscan)\"]\nvariantannotation [label = \"Variant Annotation\n(snpEff)\"]\nvcfdata [label = \"VCF annoté\" shape = folder]\n\n# edge definitions with the node IDs\ndata  -> qc_control -> trimming  -> alignment -> markduplicate -> variantalling -> variantannotation -> vcfdata\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-34da7816f0617d990536" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-34da7816f0617d990536">{"x":{"diagram":"digraph {\n\ngraph [layout = dot, rankdir = TB]\n\n# define the global styles of the nodes. We can override these in box if we wish\nnode [shape = rectangle, style = filled, fillcolor = Linen]\n\ndata [label = \"Dataset\", shape = folder, fillcolor = Beige]\nqc_control [label =  \"Contrôle Qualité\n(FASTQC)\"]\ntrimming [label = \"Trimming\n(Trimmomatic)\"]\nalignment [label = \"Alignement\n(BWA MEM)\"]\nmarkduplicate [label =\"Readgroups + Marquage Duplicats\n(picard)\"]\nvariantalling [label= \"Variant Calling\n(Varscan)\"]\nvariantannotation [label = \"Variant Annotation\n(snpEff)\"]\nvcfdata [label = \"VCF annoté\" shape = folder]\n\n# edge definitions with the node IDs\ndata  -> qc_control -> trimming  -> alignment -> markduplicate -> variantalling -> variantannotation -> vcfdata\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="etapes-préliminaires" class="section level1" number="2">
@@ -3070,6 +3070,17 @@ l’utiliser pour faire l’appel de variants sur les fichiers
 </ul>
 <div id="solution" class="section level3" number="4.1.1">
 <h3><span class="header-section-number">4.1.1</span> Solution</h3>
+<pre class="bash"><code>
+#!/bin/bash
+
+BAM_DIR=&quot;30_ALIGNED&quot;
+mpileup_file=&quot;40_nikitin.mpileup&quot;
+variant_file=&quot;50.nikitin.varscan.multi.vcf&quot;
+
+samtools mpileup -B -f hg38.genome.chr237/hg38_chr2_3_7.fasta  $BAM_DIR/*RG.marked_duplicates.bam  &gt; $mpileup_file
+
+varscan mpileup2cns $mpileup_file  --variants --vcf-sample-list sample_list.txt  --strand-filter 0 --p-value 0.01 --min-var-freq 0.02 --output-vcf 1 &gt; $variant_file
+</code></pre>
 </div>
 </div>
 </div>
@@ -3122,6 +3133,11 @@ statistiques sur les variants. Puis en tirer des conclusions.</p></li>
 </div>
 <div id="solution-1" class="section level3" number="5.2.2">
 <h3><span class="header-section-number">5.2.2</span> Solution</h3>
+<pre class="bash"><code>
+bcftools stats 50.nikitin.varscan.multi.header.vcf
+bcftools view -h 50.nikitin.varscan.multi.header.vcf
+bcftools view -s SRR10426968 50.nikitin.varscan.multi.header.vcf &gt; SRR10426968.vcf
+</code></pre>
 </div>
 </div>
 <div id="annotation-des-variants" class="section level2" number="5.3">
@@ -3134,7 +3150,7 @@ avons détectés.</p>
 <strong>snpEff</strong>.</p>
 <p><strong>TD:</strong></p>
 <ol style="list-style-type: decimal">
-<li><p>Lire la documentation de snpEff: <a href="https://pcingola.github.io/SnpEff/se_introduction/" class="uri">https://pcingola.github.io/SnpEff/se_introduction/</a></p></li>
+<li><p>Lire la documentation de snpEff: <a href="https://pcingola.github.io/SnpEff/" class="uri">https://pcingola.github.io/SnpEff/</a></p></li>
 <li><p>Installer la base hg38.</p></li>
 <li><p>Annoter notre fichier VCF et créer un fichier
 <code>50.nikitin.varscan.multi.header.snpeff.vcf</code></p></li>
@@ -3149,6 +3165,15 @@ expliquez son organisation.</li>
 </ol>
 <div id="solution-2" class="section level3" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> Solution</h3>
+<pre class="bash"><code>
+# Télécharger la base de données hg38 (à faire une seule fois)
+
+snpEff download hg38
+
+snpEff -Xmx8g hg38 50.nikitin.varscan.multi.header.vcf &gt; 50.nikitin.varscan.multi.header.snpeff.vcf
+
+less 50.nikitin.varscan.multi.header.snpeff.vcf
+</code></pre>
 </div>
 </div>
 <div id="visualisation" class="section level2" number="5.4">
